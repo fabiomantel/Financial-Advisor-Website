@@ -122,9 +122,9 @@ body, .App {
   color: #22c55e;
 }
 .audience-list li::before {
-  content: '➤';
+  content: '\27a4';
   margin-left: 0.5em;
-  color: #2563eb;
+  color: #2563eb; /* Always blue */
 }
 .alt-bg {
   background: linear-gradient(90deg, #f1f5f9 0%, #e0f2fe 100%);
@@ -141,6 +141,7 @@ body, .App {
   height: 200px;
   border-radius: 1.5rem;
   object-fit: cover;
+  object-position: top;
   margin-bottom: 1rem;
   box-shadow: 0 4px 24px 0 #0001;
 }
@@ -188,8 +189,8 @@ body, .App {
 }
 
 .contact-section {
-  background: linear-gradient(90deg, #1e293b 0%, #2563eb 100%);
-  color: #fff;
+  background: linear-gradient(90deg, #38bdf8 0%, #a5d8ff 100%);
+  color: #222;
   border-radius: 2rem;
   margin-bottom: 2rem;
 }
@@ -269,6 +270,16 @@ body, .App {
   color: #e0e7ef;
   font-size: 0.95rem;
   margin-top: 1rem;
+  text-align: center;
+}
+
+.form-error {
+  color: #d32f2f;
+  background: #fff3f3;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
   text-align: center;
 }
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp } from 'react-icons/fa';
+// import { FaFacebookF, FaInstagram } from 'react-icons/fa'; // Commented out as requested
 
 function App() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ function App() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [formError, setFormError] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,12 +22,36 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Validation helpers
+  const validateName = (name) => /^[A-Za-zא-ת\s'-]{2,}$/.test(name.trim());
+  const validatePhone = (phone) => /^05\d{8}$/.test(phone.replace(/\D/g, ''));
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  // WhatsApp message
+  const whatsappMessage = encodeURIComponent(
+    'שלום פביו, ראיתי את האתר שלך ומעניין אותי לשמוע עוד על התוכנית להגדלת ההון.  \nאני אשמח לקבוע שיחת היכרות ולבדוק האם זה יכול להתאים לי.'
+  );
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError('');
+    if (!validateName(formData.name)) {
+      setFormError('נא להזין שם מלא תקין בעברית או באנגלית.');
+      return;
+    }
+    if (!validatePhone(formData.phone)) {
+      setFormError('נא להזין מספר טלפון ישראלי תקין (10 ספרות, מתחיל ב-05).');
+      return;
+    }
+    if (!validateEmail(formData.email)) {
+      setFormError('נא להזין כתובת מייל תקינה.');
+      return;
+    }
     setIsSubmitting(true);
+    // TODO: Integrate real email sending service here
     setTimeout(() => {
       setFormData({ name: '', phone: '', email: '', message: '' });
-      alert('הטופס נשלח בהצלחה! תודה על פנייתך. אם המייל לא מגיע תוך מספר דקות, מומלץ לבדוק גם את תיבת הספאם/זבל.');
+      alert('הטופס נשלח בהצלחה ✅\nאני אעבור על הפרטים ואחזור אליך בהקדם לפגישת היכרות.\nזוהי התחלה מצוינת לעשות סדר בהון שלך ולהתחיל לצמוח.');
       setIsSubmitting(false);
     }, 1200);
   };
@@ -44,10 +70,17 @@ function App() {
       <section className="hero-section">
         <div className="hero-bg" />
         <div className="hero-content">
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/5605bbeb8_me-modified.png" alt="פביו מנטל" className="profile-pic" />
+          <img src="/circle-profile.png" alt="פביו מנטל" className="profile-pic" />
           <h1 className="hero-title">תוכנית להגדלת ההון<br /><span className="highlight">אדריכלות פיננסית לצמיחה</span></h1>
           <p className="hero-sub">איך תסדר את ההון שלך מחדש כדי להאיץ צמיחה</p>
-          <a href="#contact" className="cta-btn">לתיאום פגישת היכרות חינמית</a>
+          <a
+            href={`https://wa.me/972523631525?text=${whatsappMessage}`}
+            className="cta-btn"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            לתיאום פגישת היכרות חינמית
+          </a>
         </div>
       </section>
 
@@ -56,12 +89,12 @@ function App() {
         <h2 className="section-title">מה כוללת התוכנית?</h2>
         <p className="section-desc">תוכנית ייחודית המעניקה לך סדר פיננסי, כלים מעשיים, ותוכנית פעולה אישית שתלווה אותך לאורך שנים. במהלך שני מפגשים אישיים נבנה יחד את האסטרטגיה המתאימה לך, נבין איפה הכסף שלך נמצא ואיך הוא יכול לעבוד עבורך.</p>
         <ul className="features-list">
-          <li>✅ תבין איפה בדיוק נמצא ההון שלך ולאן הוא הולך</li>
-          <li>✅ תוכנית פעולה מעשית שתוכל ליישם מיידית</li>
-          <li>✅ כלים פשוטים למעקב שזמינים גם מהספה</li>
-          <li>✅ ידע שישמש אותך שנים קדימה</li>
-          <li>✅ ניהול מושכל של התזרים הפנוי שלך להשקעות חדשות</li>
-          <li>✅ שקט נפשי מהעתיד הכלכלי</li>
+          <li>תבין איפה בדיוק נמצא ההון שלך ולאן הוא הולך</li>
+          <li>תוכנית פעולה מעשית שתוכל ליישם מיידית</li>
+          <li>כלים פשוטים למעקב שזמינים גם מהספה</li>
+          <li>ידע שישמש אותך שנים קדימה</li>
+          <li>ניהול מושכל של התזרים הפנוי שלך להשקעות חדשות</li>
+          <li>שקט נפשי מהעתיד הכלכלי</li>
         </ul>
       </section>
 
@@ -69,13 +102,13 @@ function App() {
       <section className="section alt-bg">
         <h2 className="section-title">למי מתאימה התוכנית?</h2>
         <ul className="audience-list">
-          <li>➤ למי שיש תזרים חיובי ורוצה לראות את הכסף שלו עובד חכם יותר</li>
-          <li>➤ למי שיש חסכונות ורוצה להגדיל את ההון במסלולים יציבים ומפוזרים</li>
-          <li>➤ למי ששוקל לרכוש דירה ורוצה להבין כמה הון עצמי באמת יש לו</li>
-          <li>➤ למי שמרגיש שהוא צריך סדר וכלים להתחיל להשקיע</li>
-          <li>➤ למי שמתלבט אם ואיך להשקיע בנדל"ן או שוק ההון</li>
-          <li>➤ למי שרוצה למקסם תשואה ולנהל סיכון בצורה אחראית</li>
-          <li>➤ למי שמבין שההשקעה הכי טובה היא היום</li>
+          <li>למי שיש תזרים חיובי ורוצה לראות את הכסף שלו עובד חכם יותר</li>
+          <li>למי שיש חסכונות ורוצה להגדיל את ההון במסלולים יציבים ומפוזרים</li>
+          <li>למי ששוקל לרכוש דירה ורוצה להבין כמה הון עצמי באמת יש לו</li>
+          <li>למי שמרגיש שהוא צריך סדר וכלים להתחיל להשקיע</li>
+          <li>למי שמתלבט אם ואיך להשקיע בנדל"ן או שוק ההון</li>
+          <li>למי שרוצה למקסם תשואה ולנהל סיכון בצורה אחראית</li>
+          <li>למי שמבין שההשקעה הכי טובה היא היום</li>
         </ul>
       </section>
 
@@ -83,15 +116,15 @@ function App() {
       <section className="section">
         <h2 className="section-title">מי אני?</h2>
         <div className="about-me">
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/bd05b875f_me.jpg" alt="פביו מנטל" className="about-pic" />
+          <img src="/large-profile.png" alt="פביו מנטל" className="about-pic" style={{objectPosition: 'top'}} />
           <div>
             <p>נעים מאוד, אני פביו מנטל – מהנדס תוכנה, יזם, ומשקיע מנוסה.<br />במהלך 15 שנותיי בהייטק, בניתי מערכת השקעות חכמה שמבוססת על אדריכלות פיננסית אישית.<br />אני משקיע בשוק ההון, בקרנות השתלמות, בנדל"ן בארה"ב, ומלווה משפחות לבניית תוכנית להגדלת ההון.</p>
             <ul className="achievements-list">
-              <li>✅ תיק השקעות מדדי עם תשואה שנתית ממוצעת של 10%</li>
-              <li>✅ מיקסום קרן השתלמות לתשואה של 12% בשנה</li>
-              <li>✅ השקעות נדל"ן בארה"ב בתשואה של 9% עם מינוף מושכל</li>
-              <li>✅ חילוץ כספי פנסיה למטרות השקעה מניבות</li>
-              <li>✅ ליווי פיננסי אישי למשפחות וניהול הון קיים וחדש</li>
+              <li>תיק השקעות מדדי עם תשואה שנתית ממוצעת של 10%</li>
+              <li>מיקסום קרן השתלמות לתשואה של 12% בשנה</li>
+              <li>השקעות נדל"ן בארה"ב בתשואה של 9% עם מינוף מושכל</li>
+              <li>חילוץ כספי פנסיה למטרות השקעה מניבות</li>
+              <li>ליווי פיננסי אישי למשפחות וניהול הון קיים וחדש</li>
             </ul>
           </div>
         </div>
@@ -129,26 +162,26 @@ function App() {
         <h2 className="section-title">מוכנים לצאת לדרך?</h2>
         <p className="section-desc">אני מזמין אתכם לפגישת היכרות חינמית, בה נבין יחד איך לסדר מחדש את ההון שלכם ולהתחיל לצמוח.<br />זה לא ייעוץ השקעות – זו אדריכלות פיננסית מותאמת אישית.</p>
         <div className="contact-options">
-          <a href="https://wa.me/972523631525" target="_blank" rel="noopener noreferrer" className="whatsapp-btn">
+          <a href={`https://wa.me/972523631525?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer" className="whatsapp-btn">
             <FaWhatsapp /> דברו איתי עכשיו בוואטסאפ
           </a>
           <span className="contact-or">או מלאו את הפרטים בטופס ונחזור אליכם בהקדם:</span>
         </div>
-        <form className="contact-form" onSubmit={handleSubmit}>
+        <form className="contact-form" onSubmit={handleSubmit} autoComplete="off">
           <input type="text" placeholder="שם מלא" value={formData.name} onChange={e => handleInputChange('name', e.target.value)} required />
-          <input type="tel" placeholder="טלפון" value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} required pattern="^[0-9-+\s()]*$" title="נא להזין מספר טלפון תקין." />
+          <input type="tel" placeholder="טלפון" value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} required pattern="^05\d{8}$" title="נא להזין מספר טלפון ישראלי תקין (10 ספרות, מתחיל ב-05)." />
           <input type="email" placeholder="מייל" value={formData.email} onChange={e => handleInputChange('email', e.target.value)} required />
           <textarea placeholder="שאלה או הערה" value={formData.message} onChange={e => handleInputChange('message', e.target.value)} rows={3} />
+          {formError && <div className="form-error">{formError}</div>}
           <button type="submit" disabled={isSubmitting}>{isSubmitting ? 'שולח...' : 'שליחת הטופס'}</button>
         </form>
-        <div className="email-info">🔁 הטופס ישלח אוטומטית למייל הבא: <b>fabiomantel@gmail.com</b></div>
       </section>
 
       {/* Footer with Socials */}
       <footer className="footer">
         <div className="footer-socials">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FaFacebookF /></a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram /></a>
+          {/* <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FaFacebookF /></a> */}
+          {/* <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram /></a> */}
           <a href="https://wa.me/972523631525" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><FaWhatsapp /></a>
         </div>
         <div className="footer-text">פביו מנטל | כל הזכויות שמורות | אדריכלות פיננסית לצמיחה</div>
